@@ -2,25 +2,19 @@ import os
 from flask import render_template,request,flash,redirect,url_for,session,Response,send_from_directory,send_file
 from app import app 
 from dropboxdb import DropBoxDB
+from flask import Flask, render_template, stream_with_context, request, Response, session, Session, json
+import copy
+from jinja2 import Environment, PackageLoader, select_autoescape
+import time
+from dropboxdb import DropBoxDB
+import thread
+import threading
 #DropBoxDB
 #import dropboxdb
 #127.0.0.1 localhost
+lock=thread.allocate_lock()
+db_obj = DropBoxDB("praveen","S@gem0de")
 APP_ROOT = os.path.dirname(os.path.abspath(__file__))
-posts = [
-    {
-        'author': 'Corey Schafer',
-        'title': 'Blog Post 1',
-        'content': 'First post content',
-        'date_posted': 'April 20, 2018'
-    },
-    {
-        'author': 'Jane Doe',
-        'title': 'Blog Post 2',
-        'content': 'Second post content',
-        'date_posted': 'April 21, 2018'
-    }
-]
-
 @app.before_request
 def require_login():
     allowed_routes = ['login' , 'register']
@@ -28,53 +22,85 @@ def require_login():
         return redirect(url_for('login'))
 
 
+@app.route('/delete_file/<id>/')
+def delete_file(id = None):
+    print("In delete file{0}".format(id))
+    db_obj.delete_file(id)
+    return
 
-@app.route('/view/', methods=['GET','POST'])
-@app.route('/view/<id>/', methods=['GET','POST'])
+@app.route('/delete_folder/<id>/')
+def delete_folder(id = None):
+    print("In delete folder {0}".format(id))
+    db_obj.delete_folder(id)
+    return
+
+@app.route('/move_file/', methods = ['GET', 'POST'])
+def move():
+    if(request.method == "POST"):
+        print("In move file")
+        src_id = request.form["src_id"]
+        dest_id = request.form["dest_id"]
+        print("In move folder src:{0} dest{1}".format(src_id,dest_id))
+        db_obj.move_file(src_id,dest_id)
+        return
+
+@app.route('/get_folder_list/<id>/', methods = ['GET', 'POST'])
+def get_folder_entries(id = None):
+    print("In get folder list {0}".format(id))
+    files = db_obj.get_folder_entries(id)
+    return files["folders"]
+
+@app.route('/get_nav_context/<id>/', methods = ['GET', 'POST'])
+def get_nav_context(id = None):
+    print("In get nav list {0}".format(id))
+    lock.acquire()
+    files = db_obj.get_navigation_context(int(id))
+    lock.release()
+    return json.dumps(files)
+
+
+
+@app.route('/view/')
+@app.route('/view/<id>/')
 def view(id=None):
-    db_obj = DropBoxDB("testuser","password")
-    print("123")
+    session['id'] = 1
     if(id == None):
-        print("4dsds56")
-        files = db_obj.get_folder_entries(5)
+        lock.acquire()
+        files = db_obj.get_folder_entries(db_obj.get_root_path_id(session["id"]))
+        lock.release()
         print(files)
-        print("456")
-        return Response(render_template('home.html', data=files))
+        return Response(render_template('homePage.html', data=files))
     else:
-        files = db_obj.get_folder_entries(id)
-        print("789")
-        return Response(render_template('home.html', data=files))
+        lock.acquire()
+        files = db_obj.get_folder_entries(int(id))
+        lock.release()
+        print(files)
+        return json.dumps(files)
 
 
 @app.route("/homePage/")
 def homePage():
     return render_template('homePage.html')
 
-
-@app.route("/dummy/")
-def dummy():
-    return render_template('dummy.html')
-
-@app.route("/")  # home/index route
-@app.route("/index",  methods=['GET','POST'])
-def hello():
-    error=''
-    try:
-        if(request.method == "POST"):
-            sub = request.form["submit"]
+# @app.route("/")  # home/index route
+# @app.route("/index",  methods=['GET','POST'])
+# def index():
+#     error=''
+#     try:
+#         if(request.method == "POST"):
+#             sub = request.form["submit"]
             
-            flash(sub)
+#             flash(sub)
            
-            if(sub):
-                return redirect(url_for('upload'))
-            else:
-                error = "Invalid try again"
-                return render_template('login.html',title='login',error=error)
-    except Exception as e:
-        flash(e)
-        return render_template('login.html',title='login',error=error)
-    return render_template('index.html',posts = posts,title="afc")
-
+#             if(sub):
+#                 return redirect(url_for('upload'))
+#             else:
+#                 error = "Invalid try again"
+#                 return render_template('login.html',title='login',error=error)
+#     except Exception as e:
+#         flash(e)
+#         return render_template('login.html',title='login',error=error)
+#     return render_template('homePage.html',title="homepage")
 
 @app.route('/download/', methods = ['GET', 'POST'])
 def download():
@@ -111,6 +137,11 @@ def upload():
     target = "/".join([APP_ROOT,"uploaded"])
     #target = APP_ROOT
     target = "/".join([target,session['email']])
+    #path here
+    print("In python recieved path = " + request.form["pathID"])
+    print("In python recieved path = " + db_obj.get_folder_path(request.form["pathID"]))
+    full_path = db_obj.get_folder_path(request.form["pathID"])
+    
     print(os.path.isdir(session['email']))
     if (not os.path.isdir(target)):
         os.mkdir(target)
@@ -121,7 +152,6 @@ def upload():
         file.save(destn)
         file_length = os.stat(destn).st_size
         print("file len is",file_length)
-        db_obj = DropBoxDB("testuser","password")
         file_details = dict()
         file_details["name"] = filename
         file_details["path"] = 5
@@ -140,7 +170,6 @@ def about():
 
 @app.route("/changepassword/",methods=['GET','POST'])
 def changepassword():
-    db_obj = DropBoxDB("testuser","password")
     user_details = dict()
     user_details["email"] = session['email']
     
@@ -155,7 +184,6 @@ def changepassword():
 
 @app.route("/createFolder/",methods=['GET','POST'])
 def createFolder():
-    db_obj = DropBoxDB("testuser","password")
     folder_details = dict()
     folder_details['name'] = request.form['foldername']
     print folder_details['name']
@@ -173,9 +201,7 @@ def register():
     try:
         if(request.method == "POST"):
             print("in register")
-            db_obj = DropBoxDB("testuser","password")
-            print("in register 1")
-            
+            print("in register 1")           
             to_register_email = request.form["email"]
             print("in register 2")
             print(to_register_email)
@@ -215,7 +241,6 @@ def login():
             attempted_pwd = request.form['password']
             flash(attempted_email)
             flash(attempted_pwd)
-            db_obj = DropBoxDB("testuser","password")
             
             #user_details = dict()
             #user_details["email"] = "ab@gmail.com"
@@ -235,7 +260,7 @@ def login():
             #if(attempted_email=="chitta.vssut@gmail.com" and attempted_pwd=="123"):
             if(db_obj.authenticate_user(user_details)):
                 session['email'] = attempted_email
-                return redirect(url_for('hello'))
+                return redirect(url_for('view'))
             else:
                 error = "Invalid try again"
                 return render_template('login.html',title='login',error=error)
