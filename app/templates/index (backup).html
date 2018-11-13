@@ -1,0 +1,66 @@
+<head>
+
+
+    <link href="//netdna.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css" rel="stylesheet">
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+    <script src="//netdna.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
+    <link href="static/dist/bootstrap.fd.css" rel="stylesheet">
+    <script src="static/dist/bootstrap.fd.js"></script>
+
+    <script type="text/javascript">
+        $('#file').change(function() {
+            $('#uploadform').submit();
+        });
+    </script>
+</head>
+{% extends "layout.html" %} {% block content %} {% for post in posts %}
+<article class="media content-section">
+    <div class="media-body">
+        <div class="article-metadata">
+            <a class="mr-2" href="#">{{ post.author }}</a>
+            <small class="text-muted">{{ post.date_posted }}</small>
+        </div>
+        <h2><a class="article-title" href="#">{{ post.title }}</a></h2>
+        <p class="article-content">{{ post.content }}</p>
+    </div>
+</article>
+
+<a href="/logout">log out</a> {% endfor %}
+<!-- <form method="POST" action="">
+    <a href="/upload"><input type=”button” value="{{ url_for('upload')}}"></a>
+    <a href="/upload"><button type="button" class="btn btn-default" value="{{ url_for('upload')}}">Upload</button>
+    </a>
+</form>
+-->
+<!--
+<form class="md-form" id="uploadform" action="{{url_for('upload')}}" method="POST" enctype="multipart/form-data">
+    <div class="file-field">
+        <div class="btn btn-primary btn-sm float-left">
+            <span>Choose file</span>
+            <input type="file" name="file" accept="" multiple>
+        </div>
+        <div class="file-path-wrapper">
+            <input class="file-path validate" type="text" placeholder="Upload your file">
+        </div>
+    </div>
+</form>
+-->
+
+<form class="md-form" id="uploadform" action="{{url_for('upload')}}" method="POST" enctype="multipart/form-data">
+    <div class="file-field">
+        <div class="btn btn-primary btn-sm float-left">
+            <input type="file" id="file" name="file" onchange="form.submit()" accept="" multiple>
+        </div>
+
+    </div>
+</form>
+
+
+<!--
+<form action="/action_page.php" method="get">
+    First name: <input type="text" name="fname"><br> Last name: <input type="text" name="lname"><br>
+    <button type="submit">Submit</button>
+    <button type="submit" formmethod="post">Submit using POST</button>
+</form>
+-->
+{% endblock content %}

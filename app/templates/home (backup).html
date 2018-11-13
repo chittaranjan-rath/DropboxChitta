@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Bootstrap Example</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="{{ url_for('static', filename='css/bootstrap.min.css')}}" rel="stylesheet">
+    <script src="{{ url_for('static', filename='js/jQuery.js') }}"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $('input[type=submit]').hide();
+            var click_id = "";
+            var click_type = "";
+            // Edit row on edit button click
+            $(document).on("click", ".edit", function() {
+                $(this).parents("tr").find("td:not(:last-child)").each(function() {
+                    $(this).html('<input type="text" class="form-control" value="' + $(this).text() + '">');
+                });
+                $(this).parents("tr").find(".add, .edit").toggle();
+                $(".add-new").attr("disabled", "disabled");
+            });
+            // Delete row on delete button click
+            $(document).on("click", ".delete", function() {
+                console.log("in delete");
+                var id = $(this).parents("tr").children(".id").html();
+                var type = $(this).parents("tr").children(".type").html();
+                // temp.html("Praveen")
+                console.log(id);
+                console.log(type);
+                if (type == "File") {
+                    var jqxhr = $.get("/delete_file/" + id + "/", function() {
+                        alert("success");
+                    });
+                } else {
+                    var jqxhr = $.get("/delete_folder/" + id + "/", function() {
+                        alert("success");
+                    });
+                }
+                $(this).parents("tr").remove();
+            });
+
+            $(document).on("click", ".download", function() {
+                var id = $(this).parents("tr").children(".name").html();
+                var type = $(this).parents("tr").children(".type").html();
+
+                console.log("on dload click");
+                console.log("may be fname is below");
+                var x = $(this).parents("tr").find(".name").html();
+                console.log(x)
+                var url = window.location.href;
+                var res = url.split("/");
+                console.log(url)
+                y = res[res.length - 1];
+                console.log(y)
+                url = "/download/";
+                //$("#myform input[name=first_name]").val()
+                //$("#fid input[name=f_name]").val(x);
+                //$("#fid input[name=dest_path]").val(y);
+                $("#f_name").val(x);
+                $("#dest_path").val(y);
+                $('input[type=submit]')[0].click();
+                //document.getElementById("fid").submit()
+
+
+            });
+
+            // $.ajax({
+            // url: "/download_file",
+            //success: function(response) {
+            // here you do whatever you want with the response variable
+            //}
+            //});
+
+
+
+
+
+
+
+
+            $(document).on("click", ".modal_button", function() {
+                console.log("in modal sub button");
+                var dest_id = $(this).parents("tr").children(".id").html();
+                var dest_path = $(this).parents("tr").find(".modal_button").html();
+                console.log("dest id: " + dest_id);
+                console.log("dest path: " + dest_path);
+                if (click_type == "File") {
+                    url = "/move_file/";
+                } else {
+                    url = "/move_folder/";
+                }
+                console.log("Url: " + url);
+                console.log("Before post");
+                $.post(url, {
+                    src_id: click_id,
+                    dest_path: dest_path
+                });
+                console.log("After post");
+                // location.reload();
+                // console.log(this);
+            });
+
+            $(document).on("click", ".name", function() {
+                console.log("in click");
+                var id = $(this).parents("tr").children(".id").html();
+                console.log(id);
+                url = "/view/" + id + "/";
+                $(location).attr('href', url);
+                // console.log(this);
+            });
+            $(document).on("click", ".dropdown-toggle", function() {
+                console.log("in dropdown click");
+                click_id = $(this).parents("tr").children(".id").html();
+                click_type = $(this).parents("tr").children(".type").html();
+                console.log("click id " + click_id);
+                console.log("click type " + click_type);
+                // console.log(this);
+            });
+
+            function getFolderList() {
+                var TableData = new Map(); //initialize map;
+
+                //Here traverse and  read input/select values present in each td of each tr, ;
+                $("table#data > tbody > tr").each(function(row, tr) {
+                    id = $(this).find("td.id").text();
+                    type = $(this).find("td.type").text();
+                    name = $(this).find(".name").text();
+                    if (type == "Folder") {
+                        TableData[id] = name;
+                    }
+                });
+                return TableData;
+            }
+
+            $('#exampleModal').on('show.bs.modal', function(event) {
+                var button = $(event.relatedTarget) // Button that triggered the modal
+                var recipient = button.data('whatever') // Extract info from data-* attributes
+                    // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
+                    // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
+                var modal = $(this)
+                folders = getFolderList();
+                console.log(folders);
+                list = modal.find('.list-group');
+                list.empty();
+                Object.keys(folders).forEach(function(key) {
+                    value = folders[key];
+                    console.log("In modal folder id " + key + "click id " + click_id);
+                    if ((click_type == "Folder" && key != click_id) || click_type != "Folder") {
+                        list.append("<tr><td class=\"id\">" + key + "</td><td><button type=\"button\" class=\"list-group-item list-group-item-action modal_button\">" + value + "</button></td>");
+                    }
+                });
+                // for (index = 0; index < folders.length; index++)
+                // {
+                //   list.append("<tr><td>"+"<<button type=\"button\" class=\"list-group-item list-group-item-action modal_button\">"  + folders[index] + "</button>");
+                // }
+            });
+
+
+        });
+    </script>
+
+</head>
+
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">New message</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+
+            <div class="modal-body">
+                <div class="modal-data">
+                    <!-- <ul class="modal-list" id="move-list">
+          </ul> -->
+                    <div class="list-group">
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary">Send message</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<body>
+
+    <table class="table table-hover" id="data">
+        <thead>
+            <tr>
+                <th scope="col">ID</th>
+                <th scope="col">Type</th>
+                <th scope="col">Name</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for row in data["files"] %}
+            <tr>
+                <td scope="row" class="id">{{row["id"]}}</td>
+                <td class="type">File</td>
+                <td><a href="#" class="name">{{row["name"]}}</a></td>
+                <td>
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">... <span class="caret"></span></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="#" class="delete">delete</a></li>
+                            <li><a href="#" class="download">download</a></li>
+                            <li><a href="#" class="move" data-toggle="modal" data-target="#exampleModal" data-whatever="@mdo">move</a></li>
+                        </ul>
+                    </li>
+                </td>
+            </tr>
+            {% endfor %} {% for row in data["folders"] %}
+            <tr>
+                <td scope="row" class="id">{{row["id"]}}</td>
+                <td class="type">Folder</td>
+                <td><a href="#" class="name">{{row["name"]}}</a></td>
+                <td>
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">... <span class="caret"></span></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="#" class="delete">delete</a></li>
+                            <li><a href="#" class="download">download</a></li>
+                            <li><a href="#" class="move" data-toggle="modal" data-target="#exampleModal" data-whatever="@mdo">move</a></li>
+                        </ul>
+                    </li>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+
+        <form action="/download/" method="POST" id="fid">
+            <input type="hidden" id="f_name" name="f_name" value="">
+            <input type="hidden" id="dest_path" name="dest_path" value="">
+            <input type="submit" value="Submit">
+        </form>
+    </table>

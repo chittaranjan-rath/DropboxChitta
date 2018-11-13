@@ -1,0 +1,17 @@
+g++ clientd11.cpp -lcrypto -lpthread -o d11
+
+./d11 127.0.0.1 7071
+
+
+g++ clientd12.cpp -lcrypto -lpthread -o d12
+
+./d12 127.0.0.1 7072
+
+
+g++ clientd13.cpp -lcrypto -lpthread -o d13
+
+./d13 127.0.0.1 7073
+
+
+g++ tracker1.cpp -o tracker1
+./tracker1

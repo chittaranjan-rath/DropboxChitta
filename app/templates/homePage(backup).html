@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Home Page</title>
+    <!-- 
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+	<script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script> -->
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+
+
+
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='stylesHomePage.css') }}">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="shortcut icon" href="#" />
+
+
+
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.0/css/all.css" integrity="sha384-lKuwvrZot6UHsBSfcMvOkWwlCMgc0TaWr+30HWe3a4ltaBwTZhyTEggF5tJv8tbt" crossorigin="anonymous">
+    <!--  <script type="text/javascript">
+        function clickUpload() {
+            $('#fileupload').click();
+            console.log("checkin");
+
+        }
+        $(document).ready(function() {
+
+            $(document).on("click", "#btnFolderCreate", function() {
+                console.log("in modal sub button");
+                var bla = $('#inputFolderName').val();
+                console.log(bla);
+                url = /createFolder/;
+                $.post(url, {
+                    foldername: bla
+                });
+
+                console.log("Afterpost ");
+
+            });
+
+        });
+    </script> -->
+    <!-- <script src="{{ url_for('static',filename = 'validate.js') }}"></script> -->
+
+</head>
+
+<body>
+
+    <!-- <form action="/loginNext" method="post" id="form1">
+		<p> User ID: <input type="text" name="userid" id="userID"> </p>
+		<p> Password : <input type="password" name="loginpassword" id="loginPassword"> </p>
+		<p> Confirm Password : <input type="password" name="loginpassword1" id="loginPassword2"> </p>
+		<p> <input type="submit" value="Log Me In!" onclick="validate()"> </p>
+	</form>
+</body> -->
+
+    <!-- <h1 style="">hello</h1> -->
+    <!-- <div id="homePage"> -->
+    <!-- <h3 class="text-center text-white pt-5">Login form</h3> -->
+
+    <div class="container-fluid">
+        <!-- <h2>Homepage</h2> -->
+
+        <nav class="navbar fixed-top navbar-dark bg-primary">
+            <a class="navbar-brand" href="#!">DropBox</a>
+            <div class="dropdown dropleft">
+                <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+					Settings
+				</button>
+                <div class="dropdown-menu" aria-labelledby="dropdownMenu1">
+                    <a class="dropdown-item" href="#!">Change password</a>
+                    <a class="dropdown-item" href="#!">Logout</a>
+                </div>
+            </div>
+
+        </nav>
+        <br>
+        <br>
+
+
+        <div class="main">
+
+            <div class="input-group">
+                <input type="text" class="form-control" placeholder="Search files">
+                <div class="input-group-append">
+                    <button class="btn btn-secondary" type="button">
+						<i class="fa fa-search"></i>
+					</button>
+                </div>
+            </div>
+
+        </div>
+
+
+        <!-- 
+			<nav class="navbar navbar-dark bg-dark">
+				
+				<form class="form-inline">
+					<input class="form-control mr-sm-2" type="text" placeholder="Search">
+					<button class="btn  mr-2 my-sm-0" type="submit">Search</button>
+					
+				</form>
+			</nav>
+		-->
+
+
+        <div class="row">
+            <div class="col-2 firstColumn">
+                <br>
+                <br>
+                <ul>
+
+                    <li>
+
+                        <a href="#">Files</a>
+                    </li>
+
+
+                </ul>
+
+            </div>
+            <div class="col-8 secondColumn">
+
+                <table class="table">
+
+                    <!-- <thead>
+						<tr class="d-flex">
+							<th class="col-3">25</th>
+							<th class="col-3">25</th>
+							<th class="col-6">50</th>
+						</tr>
+					</thead>
+				-->
+                    <tr class="active d-flex">
+                        <th class="col-1"></th>
+
+                        <th class="col-6">Filename</th>
+                        <th class="col-3">Type</th>
+                        <th class="col-2">(buttons)</th>
+                        <!-- <th></th> -->
+                    </tr>
+
+                    <tr class="d-flex">
+                        <td class="col-1"> <i class="material-icons">file_copy</i></td>
+                        <td class="col-6">
+                            a.txt
+                        </td>
+                        <td class="col-3">
+                            Public
+                            <!-- <ul style="padding-left:15px">
+							<li>Site Quality and Lean Head, USA based Aerospace company</li>          
+						</ul> -->
+                        </td>
+                        <td class="col-2">(temp)</td>
+                    </tr>
+                    <tr class="d-flex">
+                        <td class="col-1"><i class="material-icons">folder</i></td>
+                        <td class="col-6">
+                            Folder1
+                        </td>
+                        <td class="col-3">
+                            Private
+                            <!-- <ul style="padding-left:15px">
+							<li>Software Engineer</li>          
+						</ul> -->
+                        </td>
+                        <td class="col-2">(temp)</td>
+
+                    </tr>
+                </table>
+            </div>
+            <div class="col-2 thirdColumn">
+                <br>
+                <br>
+                <ul class="list-group" style="background-color:whitesmoke">
+
+                    <li class="list-group-item">
+
+                        <a>Size used :</a>
+                        <label>100MB</label>
+                    </li>
+
+                    <li class="list-group-item">
+
+                        <!-- <form class="md-form" id="uploadform" action="{{url_for('upload')}}" method="POST" enctype="multipart/form-data">
+                            <div class="file-field">
+                                <input type="file" style="display:none" id="fileupload" name="file" onchange="form.submit()" accept="" multiple>
+                                <button type="button" id="btnUpload" class="btn btn-primary" onclick="clickUpload()">Upload</button>
+
+
+                            </div>
+                        </form>
+							-->
+                    </li>
+                    <li class="list-group-item">
+
+
+
+                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
+								Create folder
+						</button>
+
+                        <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+											<span aria-hidden="true">&times;</span>
+										  </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        ...
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                        <button type="button" class="btn btn-primary">Save changes</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+
+
+
+                        <!--                         
+                        <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="exampleModalLabel">Enter folder name</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+										<span aria-hidden="true">&times;</span>
+									  </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <input type="text" style="width: 100%" id="inputFolderName">
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                        <button type="button" id="btnFolderCreate" class="btn btn-primary">Create folder</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div> -->
+                    </li>
+
+                </ul>
+
+            </div>
+        </div>
+    </div>
+
+
+
+
+    <!-- <div class="container"> -->
+
+
+    <!-- </div> -->
+
+
+
+    <!-- </div> -->
+</body>
+
+</html>

@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Register Form</title>
+
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='stylesRegister.css') }}">
+
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
+    <script type="text/javascript">
+        // polyfill for RegExp.escape
+        if (!RegExp.escape) {
+            RegExp.escape = function(s) {
+                return String(s).replace(/[\\^$*+?.()|[\]{}]/g, '\\$&');
+            };
+        }
+    </script>
+
+    <!-- <script src="{{ url_for('static',filename = 'validate.js') }}"></script> -->
+
+</head>
+
+<body>
+
+    <!-- <form action="/loginNext" method="post" id="form1">
+		<p> User ID: <input type="text" name="userid" id="userID"> </p>
+		<p> Password : <input type="password" name="loginpassword" id="loginPassword"> </p>
+		<p> Confirm Password : <input type="password" name="loginpassword1" id="loginPassword2"> </p>
+		<p> <input type="submit" value="Log Me In!" onclick="validate()"> </p>
+	</form>
+</body> -->
+
+    <!-- <h1 style="">hello</h1> -->
+    <div id="login">
+        <!-- <h3 class="text-center text-white pt-5">Login form</h3> -->
+        <div class="container">
+            <div id="login-row" class="row justify-content-center align-items-center">
+                <div id="login-column" class="col-md-6">
+                    <div id="login-box" class="col-md-12">
+                        <form id="register-form" class="form" action="" method="POST">
+                            <h3 class="text-center text-info">Register</h3>
+                            <div class="form-group">
+                                <label for="email" class="text-info">Email:</label><br>
+                                <input type="email" name="email" id="email" class="form-control" value="{{request.form.email}}">
+                            </div>
+                            <div class="form-group">
+                                <label for="name" class="text-info">Name:</label><br>
+                                <input type="text" required name="name" id="name" class="form-control" value="{{request.form.name}}">
+
+                            </div>
+                            <div class="form-group">
+                                <label for="password" class="text-info" placeholder="password">Password:</label><br>
+                                <!-- <input type="password" required pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,}" name="password" id="password" class="form-control"> -->
+                                <input title="Password must contain at least 5 characters. Atleast one upper, one lowercase and one digit" class="form-control" type="password" value="{{request.form.password}}" required pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{5,}" name="password" id="password"
+                                    onchange="
+                            this.setCustomValidity(this.validity.patternMismatch ? this.title : '');
+                            if(this.checkValidity()) form.confirmPassword.pattern = RegExp.escape(this.value);
+                            ">
+
+                            </div>
+                            <div class="form-group">
+                                <label for="confirmPassword" class="text-info">Confirm Password:</label><br>
+                                <!-- <input type="text" name="confirmPassword" id="confirmPassword" class="form-control"> -->
+                                <input title="Password mismatch" type="password" required pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{5,}" name="confirmPassword" id="confirmPassword" class="form-control" onchange="this.setCustomValidity(this.validity.patternMismatch ? this.title : '');">
+                            </div>
+
+                            <div class="form-group">
+                                <input type="submit" name="submit" class="btn btn-info btn-md" value="Submit">
+                            </div>
+
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
