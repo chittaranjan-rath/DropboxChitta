@@ -68,13 +68,13 @@ def view(id=None):
         lock.acquire()
         files = db_obj.get_folder_entries(db_obj.get_root_path_id(session["id"]))
         lock.release()
-        print(files)
+        # print(files)
         return Response(render_template('homePage.html', data=files))
     else:
         lock.acquire()
         files = db_obj.get_folder_entries(int(id))
         lock.release()
-        print(files)
+        # print(files)
         return json.dumps(files)
 
 
@@ -141,7 +141,7 @@ def upload():
     print("In python recieved path = " + request.form["pathID"])
     print("In python recieved path = " + db_obj.get_folder_path(request.form["pathID"]))
     full_path = db_obj.get_folder_path(request.form["pathID"])
-    
+
     print(os.path.isdir(session['email']))
     if (not os.path.isdir(target)):
         os.mkdir(target)
@@ -179,7 +179,7 @@ def changepassword():
     
     db_obj.modify_password(user_details)
     print("password changed successfully")
-    return render_template('homePage.html')
+    return "Dsadsa"
 
 
 @app.route("/createFolder/",methods=['GET','POST'])
@@ -187,13 +187,14 @@ def createFolder():
     folder_details = dict()
     folder_details['name'] = request.form['foldername']
     print folder_details['name']
-    folder_details["path"] = 1
+    folder_details["path"] = request.form['pathID']
+    print("In create folder, path = {0}".format(folder_details["path"]))
     owner_id = db_obj.get_user_id(session['email'])
     print(owner_id)
     folder_details["owner"] = owner_id
     db_obj.create_folder(folder_details)
     print("succesfully created folder")
-    return render_template('homePage.html')
+    return "ousdaiudsy"
 
 @app.route("/register", methods=['GET','POST'])
 def register():

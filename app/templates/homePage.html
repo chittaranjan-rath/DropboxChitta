@@ -303,7 +303,8 @@
                             console.log(bla);
                             url = /createFolder/;
                             $.post(url, {
-                                foldername: bla
+                                foldername: bla,
+                                pathID: curr_page_id
                             });
                             console.log("Afterpost ");
                         }),

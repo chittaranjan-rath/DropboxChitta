@@ -134,7 +134,7 @@ def create_folder(db_obj, db_cursor, folder_details):
   f_path = folder_details["path"]
   f_owner = folder_details["owner"]
   select_string = "select * from folder where NAME='"+f_name+"' and PATH="+str(f_path)
-  db_cursor.execute()
+  db_cursor.execute(select_string)
   result_tuples = db_cursor.fetchall()
   if len(result_tuples) > 0:
     return
@@ -147,7 +147,7 @@ def folder_exists(db_cursor, folder_details):
   f_name = folder_details["name"]
   f_path = folder_details["path"]
   select_string = "select * from folder where NAME='"+f_name+"' and PATH="+str(f_path)
-  db_cursor.execute()
+  db_cursor.execute(select_string)
   result_tuples = db_cursor.fetchall()
   if len(result_tuples) > 0:
     return True
